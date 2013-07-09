@@ -1,24 +1,49 @@
 package sudoku;
 
-import sudoku.util.QuadCircularLinkedList;
+import sudoku.interfaces.ISudoku;
 
-public class Sudoku {
+/**
+ * An implementation of a Sudoku puzzle.
+ * @author Jaime Lennox
+ * 
+ *
+ */
+public class Sudoku implements ISudoku {
   
-  private static final int GRID_LENGTH = 10;
-  private QuadCircularLinkedList<Cell> grid =
-      new QuadCircularLinkedList<Cell>(GRID_LENGTH, GRID_LENGTH);
+  private static final int GRID_COLUMNS = 9;
+  private static final int GRID_ROWS    = 9;
+
   
   public Sudoku() {
     
-    
+  }
+  
+  @Override
+  public void solve() {
+    // TODO Auto-generated method stub
     
   }
 
-  public static void main(String[] args) {
+  @Override
+  public void generate() {
+    // TODO Auto-generated method stub
     
-    Sudoku sudoku = new Sudoku();
-    
-
   }
 
+  @Override
+  public void load() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void save() {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  public static void main(String[] args) {    
+
+  }
+  
 }
