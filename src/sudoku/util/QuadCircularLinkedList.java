@@ -75,7 +75,17 @@ public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList {
 
   @Override
   public void removeNode(int rowIndex, int columnIndex) {
-    // TODO Auto-generated method stub
+    
+    Node<T> node = grid.get(columnIndex).get(rowIndex);
+    
+    if (node != header) {
+    
+      node.setLeft(node.getRight());
+      node.setRight(node.getLeft());
+      node.setUp(node.getDown());
+      node.setDown(node.getUp());
+    
+    }
     
   }
 
