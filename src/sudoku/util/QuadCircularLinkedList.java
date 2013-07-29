@@ -12,7 +12,7 @@ import sudoku.interfaces.IQuadCircularLinkedList;
  * node. There is a master header node that points to the start of the list.
  * @author Jaime Lennox
  */
-public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList {
+public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList<T> {
   
   private Node<T> header;
   private List<List<Node<T>>> grid = new ArrayList<List<Node<T>>>();
@@ -42,9 +42,6 @@ public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList {
       xNode.getRight().setRight(header);
       xNode = xNode.getRight();
       
-      grid.add(new ArrayList<Node<T>>());
-      grid.get(i).add(xNode);
-      
       for (int j = 1; j < rows; j++) {
         
         yNode = xNode;
@@ -64,7 +61,6 @@ public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList {
         
         yNode = yNode.getDown();       
         previousNodes.add(yNode);
-        grid.get(i).add(yNode);
         
       }
       
@@ -74,33 +70,114 @@ public class QuadCircularLinkedList<T> implements IQuadCircularLinkedList {
   }
 
   @Override
-  public void removeNode(int rowIndex, int columnIndex) {
+  public void coverNode(int rowIndex, int columnIndex) {
     
-    Node<T> node = grid.get(columnIndex).get(rowIndex);
+    if (rowIndex != 0) {
     
-    if (node != header) {
-    
+      Node<T> node = grid.get(columnIndex).get(rowIndex);
+      
+      assert node.getLeft() != null;
+      assert node.getRight() != null;
+      assert node.getUp() != null;
+      assert node.getDown() != null;
+      
       node.setLeft(node.getRight());
       node.setRight(node.getLeft());
       node.setUp(node.getDown());
       node.setDown(node.getUp());
-    
+      
     }
     
   }
 
   @Override
-  public void removeColumn(int columnIndex) {
-    // TODO Auto-generated method stub
+  public void coverColumn(int columnIndex) {
+    
+    List<Node<T>> column = grid.get(columnIndex);
+
+    for (Node<T> node : column) {
+      
+      node.setLeft(node.getRight());
+      node.setRight(node.getLeft());
+      
+    }
     
   }
 
   @Override
-  public void removeRow(int rowIndex) {
-    // TODO Auto-generated method stub
+  public void coverRow(int rowIndex) {
     
-  }  
+    if (rowIndex != 0) {
+    
+      Node<T> currentNode = grid.get(0).get(rowIndex);
+      
+      for (int i = 0; i < grid.size(); i++) {
+        
+        currentNode.setUp(currentNode.getDown());
+        currentNode.setDown(currentNode.getUp());
+       
+      }
+      
+    }
+    
+  }
   
-  
+  @Override
+  public void uncoverNode(int rowIndex, int columnIndex) {
+    
+    if (rowIndex != 0) {
+      
+      Node<T> node = grid.get(columnIndex).get(rowIndex);
+      
+      assert node.getLeft() != null;
+      assert node.getRight() != null;
+      assert node.getUp() != null;
+      assert node.getDown() != null;
+      
+      node.getLeft().setRight(node);
+      node.getRight().setLeft(node);
+      node.getUp().setDown(node);
+      node.getDown().setUp(node);
+        
+    }
+    
+  } 
+
+  @Override
+  public void uncoverColumn(int columnIndex) {
+    
+    List<Node<T>> column = grid.get(columnIndex);
+
+    for (Node<T> node : column) {
+      
+      node.getLeft().setRight(node);
+      node.getRight().setLeft(node);
+      
+    }
+    
+  }
+
+  @Override
+  public void uncoverRow(int rowIndex) {
+    
+    if (rowIndex != 0) {
+      
+      Node<T> currentNode = grid.get(0).get(rowIndex);
+      
+      for (int i = 0; i < grid.size(); i++) {
+        
+        currentNode.getUp().setDown(currentNode);
+        currentNode.getDown().setUp(currentNode);
+       
+      }
+      
+    }
+    
+  }
+
+  @Override
+  public void updateNode(int rowIndex, int columnIndex, T newValue) {
+    grid.get(columnIndex).get(rowIndex).setValue(newValue);
+  }
 
 }
