@@ -5,12 +5,11 @@ import sudoku.util.QuadCircularLinkedList;
 
 public class ExactCover {
   
-  public ExactCover() {
-    IQuadCircularLinkedList<Short> = new QuadCircularLinkedList<Short>();
+  private IQuadCircularLinkedList<Short> exactCover =
+      new QuadCircularLinkedList<Short>(0,0);
+  
+  public void solve() {
+    
   }
-  
-  public void solve();
-  
-  public void 
 
 }
