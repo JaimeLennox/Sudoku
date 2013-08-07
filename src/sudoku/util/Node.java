@@ -1,6 +1,6 @@
 package sudoku.util;
 
-class Node<T> {
+public class Node<T> {
   
   private Node<T> header;
   private Node<T> up;
