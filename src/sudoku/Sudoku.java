@@ -1,13 +1,14 @@
 package sudoku;
 
 import sudoku.util.ColumnNode;
+import sudoku.util.Difficulty;
 
 /**
  * An implementation of a Sudoku puzzle.
  * @author Jaime Lennox
  * 
  */
-public class Sudoku {
+public class Sudoku implements ISudoku {
   
   private static final int GRID_COLUMNS = 9;
   private static final int GRID_ROWS    = 9;
@@ -40,15 +41,15 @@ public class Sudoku {
     
   }
   
-  /**
-   * Solves a given sudoku puzzle using Algorithm X.
-   * @param sudokuGrid The sudoku puzzle to be solved.
-   * @return The solved sudoku puzzle.
-   */
-  public Cell[][] solve(Cell[][] sudokuGrid) {
+  public ColumnNode<Short> algorithmX(ColumnNode<Short> dancingLinks) {
     return null;
   }
   
+  @Override
+  public Cell[][] solve(Cell[][] sudokuGrid) {
+    return decodeSudoku(algorithmX(encodeSudoku(sudokuGrid)));
+    
+  }
   
   public Cell[][] loadText() {
     return null;    
@@ -56,9 +57,15 @@ public class Sudoku {
   
   /**
    * Displays a text output of a sudoku puzzle.
+   * @param sudokuGrid The Sudoku puzzle to be displayed.
    */
   public void displayText(Cell[][] sudokuGrid) {
 
+  }
+  
+  @Override
+  public Cell[][] generate(Difficulty difficulty) {
+    return null;
   }
   
   public static void main(String[] args) {
