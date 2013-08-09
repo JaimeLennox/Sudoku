@@ -12,6 +12,10 @@ public class Node<T> {
   private int rowIndex;
   private int columnIndex;
 
+  
+  /* Default constructor. */
+  public Node() {}
+  
   /**
    * 
    * Creates a new node for a quadruply linked list.
