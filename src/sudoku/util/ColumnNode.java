@@ -1,6 +1,6 @@
 package sudoku.util;
 
-public class ColumnNode<T> extends Node<T> {
+public class ColumnNode extends Node {
   
   public ColumnNode(int columnIndex) {
     super.setColumnIndex(columnIndex);

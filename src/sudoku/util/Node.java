@@ -1,14 +1,14 @@
 package sudoku.util;
 
-public class Node<T> {
+
+public class Node {
   
-  private Node<T> header;
-  private Node<T> up;
-  private Node<T> down;
-  private Node<T> left;
-  private Node<T> right;
+  private Node header;
+  private Node up;
+  private Node down;
+  private Node left;
+  private Node right;
   
-  private T value;
   private int rowIndex;
   private int columnIndex;
 
@@ -23,54 +23,46 @@ public class Node<T> {
    * @param rowIndex The node's current row index.
    * @param columnIndex The node's current column index.
    */
-  public Node(Node<T> header, int rowIndex, int columnIndex) {
+  public Node(Node header, int rowIndex, int columnIndex) {
     this.header = header;    
     this.rowIndex = rowIndex;
     this.columnIndex = columnIndex;
   }
   
-  public Node<T> getHeader() {
+  public Node getHeader() {
     return header;
   }
 
-  public Node<T> getUp() {
+  public Node getUp() {
     return up;
   }
 
-  public void setUp(Node<T> up) {
+  public void setUp(Node up) {
     this.up = up;
   }
 
-  public Node<T> getDown() {
+  public Node getDown() {
     return down;
   }
 
-  public void setDown(Node<T> down) {
+  public void setDown(Node down) {
     this.down = down;
   }
 
-  public Node<T> getLeft() {
+  public Node getLeft() {
     return left;
   }
 
-  public void setLeft(Node<T> left) {
+  public void setLeft(Node left) {
     this.left = left;
   }
 
-  public Node<T> getRight() {
+  public Node getRight() {
     return right;
   }
 
-  public void setRight(Node<T> right) {
+  public void setRight(Node right) {
     this.right = right;
-  }
-
-  public T getValue() {
-    return value;
-  }
-
-  public void setValue(T value) {
-    this.value = value;
   }
 
   public int getRowIndex() {
