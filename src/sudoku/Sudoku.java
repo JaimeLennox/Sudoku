@@ -2,6 +2,7 @@ package sudoku;
 
 import sudoku.util.ColumnNode;
 import sudoku.util.Difficulty;
+import sudoku.util.Node;
 
 /**
  * An implementation of a Sudoku puzzle.
@@ -12,6 +13,14 @@ public class Sudoku implements ISudoku {
   
   private static final int GRID_COLUMNS = 9;
   private static final int GRID_ROWS    = 9;
+  
+  private static final int MAX_MATRIX_COLUMNS = 324;
+  private static final int MAX_MATRIX_ROWS    = 729;
+  
+  private static final int MAX_ROW_COLUMN_CONSTRAINT = 81;
+  private static final int MAX_ROW_NUMBER_CONSTRAINT = 162;
+  private static final int MAX_COLUMN_NUMBER_CONSTRAINT = 243;
+  private static final int MAX_BOX_CONSTRAINT = 324; 
   
   private Cell[][] mainGrid = new Cell[9][9];
 
@@ -26,7 +35,40 @@ public class Sudoku implements ISudoku {
    * @param sudokuGrid The sudoku grid to encode.
    * @return A pointer to the start of the dancing linked list.
    */
-  private ColumnNode<Short> encodeSudoku(Cell[][] sudokuGrid) {
+  private ColumnNode encodeSudoku(Cell[][] sudokuGrid) {
+    
+    ColumnNode header = new ColumnNode(-1);
+    
+    ColumnNode currentColumn = header;
+    
+    int rowIndex = 0;
+    int columnIndex = 0;
+
+    // Create columns for row-column constraint set.
+    for (int j = 0; j < MAX_ROW_COLUMN_CONSTRAINT; j++) {
+      
+      if ((columnIndex = j % 9) == 0) rowIndex++;
+      
+      currentColumn.setRight(new ColumnNode(j));
+      currentColumn.getRight().setLeft(currentColumn);
+      currentColumn = (ColumnNode) currentColumn.getRight();
+      
+      
+      // Create row nodes.
+      
+      // If no value then create the nine possibilities, otherwise pick
+      // same value.
+      if (sudokuGrid[rowIndex][columnIndex].getValue() == 0) {
+        
+        Node currentRow = new Node(currentColumn, 0, j);
+        
+        for (int i = 1; i < 9; i++)
+          currentRow.setDown(new Node(currentColumn, i + j * 9, j));
+        
+      } else currentColumn.setDown(new Node(currentColumn, 0, j));
+      
+    }
+    
     return null;
     
   }
@@ -34,14 +76,14 @@ public class Sudoku implements ISudoku {
   /**
    * Converts a sudoku puzzle in dancing links format back to normal.
    * @param dancingLinks The pointer to the dancing links to decode.
-   * @return The converted sudoku grid.
+   * @return A pointer to the converted sudoku grid.
    */
-  private Cell[][] decodeSudoku(ColumnNode<Short> dancingLinks) {
+  private Cell[][] decodeSudoku(ColumnNode dancingLinks) {
     return null;
     
   }
   
-  public ColumnNode<Short> algorithmX(ColumnNode<Short> dancingLinks) {
+  public ColumnNode algorithmX(ColumnNode dancingLinks) {
     return null;
   }
   
