@@ -56,16 +56,18 @@ public class Sudoku implements ISudoku {
       
       // Create row nodes.
       
+      int value = sudokuGrid[rowIndex][columnIndex].getValue();
+      
       // If no value then create the nine possibilities, otherwise pick
       // same value.
-      if (sudokuGrid[rowIndex][columnIndex].getValue() == 0) {
+      if (value == 0) {
         
         Node currentRow = new Node(currentColumn, 0, j);
         
         for (int i = 1; i < 9; i++)
           currentRow.setDown(new Node(currentColumn, i + j * 9, j));
         
-      } else currentColumn.setDown(new Node(currentColumn, 0, j));
+      } else currentColumn.setDown(new Node(currentColumn, value + j * 9, j));
       
     }
     
