@@ -120,6 +120,48 @@ public class Sudoku implements ISudoku {
       
     }
     
+    // Reset row index for use in next constraint set.
+    rowIndex = -1;
+        
+    // Create columns for column-number constraint set.
+    for (int j = MAX_ROW_COLUMN_CONSTRAINT + 1; j < MAX_ROW_NUMBER_CONSTRAINT; j++) {
+      
+      if ((columnIndex = j % 9) == 0) rowIndex++;
+      
+      currentColumn.setRight(new ColumnNode(j));
+      currentColumn.getRight().setLeft(currentColumn);
+      currentColumn = (ColumnNode) currentColumn.getRight();
+      
+      // Create row nodes.
+      
+      for (int i = 0; i < 9; i++) {
+        
+        if (sudokuGrid[i][columnIndex].getValue() == columnIndex) {
+          
+          currentColumn.setDown(new Node(currentColumn, columnIndex * rowIndex, j));
+          currentColumn.getDown().setUp(currentColumn);
+          currentColumn.getDown().setDown(currentColumn);          
+          
+        } else {
+          
+          Node currentRow = new Node(currentColumn, j * rowIndex, j);
+          
+          int limit = GRID_ROWS * GRID_ROWS;
+          
+          for (int k = 1; k < limit; k++) {
+            
+            currentRow.setDown(new Node(currentColumn, limit * k + j * rowIndex, j));
+            currentRow.getDown().setUp(currentRow);
+            currentRow.getDown().setDown(currentColumn);
+            
+            
+          }
+          
+        }
+      }
+      
+    }
+    
     return null;
     
   }
