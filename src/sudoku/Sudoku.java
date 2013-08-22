@@ -100,7 +100,7 @@ public class Sudoku implements ISudoku {
           
           currentColumn.setDown(new Node(currentColumn, columnIndex * rowIndex, j));
           currentColumn.getDown().setUp(currentColumn);
-          currentColumn.getDown().setDown(currentColumn);          
+          currentColumn.getDown().setDown(currentColumn);
           
         } else {
           
@@ -111,6 +111,7 @@ public class Sudoku implements ISudoku {
             currentRow.setDown(new Node(currentColumn,9 * k + j * rowIndex, j));
             currentRow.getDown().setUp(currentRow);
             currentRow.getDown().setDown(currentColumn);
+            currentRow = currentRow.getDown();
             
             
           }
@@ -153,7 +154,7 @@ public class Sudoku implements ISudoku {
             currentRow.setDown(new Node(currentColumn, limit * k + j * rowIndex, j));
             currentRow.getDown().setUp(currentRow);
             currentRow.getDown().setDown(currentColumn);
-            
+            currentRow = currentRow.getDown();
             
           }
           
