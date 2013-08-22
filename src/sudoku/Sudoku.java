@@ -25,7 +25,13 @@ public class Sudoku implements ISudoku {
   private Cell[][] mainGrid = new Cell[GRID_ROWS][GRID_COLUMNS];
 
   
-  public Sudoku() {
+  public Sudoku(int[][] sudoku) {
+    
+    for (int i = 0; i < GRID_ROWS; i++) {
+      for (int j = 0; j < GRID_COLUMNS; j++) {
+        mainGrid[GRID_ROWS][GRID_COLUMNS] = new Cell(sudoku[GRID_ROWS][GRID_COLUMNS]);
+      }
+    }
     
   }
   
@@ -206,8 +212,6 @@ public class Sudoku implements ISudoku {
   
   public static void main(String[] args) {
     
-    Sudoku sudoku = new Sudoku();
-
   }
   
 }
