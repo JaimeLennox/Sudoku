@@ -8,6 +8,10 @@ class Cell {
   private int value;
   private Set<Candidate> candidates = new HashSet<Candidate>();
   
+  public Cell(int value) {
+    this.value = value;
+  }
+  
   public int getValue() {
     return value;
   }
