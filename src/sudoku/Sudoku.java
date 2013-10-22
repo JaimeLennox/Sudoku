@@ -11,8 +11,9 @@ import sudoku.util.Node;
  */
 public class Sudoku implements ISudoku {
   
-  private static final int GRID_COLUMNS = 9;
-  private static final int GRID_ROWS    = 9;
+  private static final int GRID_COLUMNS   = 9;
+  private static final int GRID_ROWS      = 9;
+  private static final int MAX_GRID_VALUE = 9;
   
   private static final int MAX_MATRIX_ROWS    = 729;
   private static final int MAX_MATRIX_COLUMNS = 324;
@@ -23,7 +24,6 @@ public class Sudoku implements ISudoku {
   private static final int MAX_BOX_CONSTRAINT = 324; 
   
   private Cell[][] mainGrid = new Cell[GRID_ROWS][GRID_COLUMNS];
-
   
   public Sudoku(int[][] sudoku) {
     
@@ -43,42 +43,53 @@ public class Sudoku implements ISudoku {
    */
   private ColumnNode encodeSudoku(Cell[][] sudokuGrid) {
     
-    ColumnNode header = new ColumnNode(-1);
+    // Create matrix to record node locations.
+    int[][] nodeMatrix = new int[MAX_MATRIX_ROWS][MAX_MATRIX_COLUMNS];
+    int calculationStore = 0;
     
+    ColumnNode header = new ColumnNode(-1);
     ColumnNode currentColumn = header;
     
+    // Initialise indexes.
     int rowIndex = -1;
     int columnIndex = 0;
 
-    // Create columns for row-column constraint set.
+    // Create columns for the row-column constraint set.
     for (int j = 0; j < MAX_ROW_COLUMN_CONSTRAINT; j++) {
       
-      if ((columnIndex = j % 9) == 0) rowIndex++;
+      if ((columnIndex = j % GRID_COLUMNS) == 0) rowIndex++;
       
       currentColumn.setRight(new ColumnNode(j));
       currentColumn.getRight().setLeft(currentColumn);
       currentColumn = (ColumnNode) currentColumn.getRight();
       
-      // Create row nodes.
+      // Create row nodes:
       
       int value = sudokuGrid[rowIndex][columnIndex].getValue();
       
-      // If no value then create the nine possibilities, otherwise pick
-      // same value.
+      // If no value then create nodes for the nine possibilities, otherwise 
+      // only create a node for the same value.
       if (value == 0) {
         
-        Node currentRow = new Node(currentColumn, j * 9, j);
+        calculationStore = j * MAX_GRID_VALUE;
+        Node currentRow = new Node(currentColumn, calculationStore, j);
+        nodeMatrix[calculationStore][j] = 1;
         
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < MAX_GRID_VALUE; i++) {
           
-          currentRow.setDown(new Node(currentColumn, i + j * 9, j));
+          calculationStore++; // Shortened from i + j * MAX_GRID_VALUE
+          nodeMatrix[calculationStore][j] = 1;
+          currentRow.setDown(new Node(currentColumn, calculationStore, j));
           currentRow.getDown().setUp(currentRow);
           currentRow.getDown().setDown(currentColumn);
+          
         }
         
       } else {
         
-        currentColumn.setDown(new Node(currentColumn, value + j * 9, j));
+        calculationStore = value - 1 + j * MAX_GRID_VALUE;
+        nodeMatrix[calculationStore][j] = 1;
+        currentColumn.setDown(new Node(currentColumn, calculationStore, j));
         currentColumn.getDown().setUp(currentColumn);
         currentColumn.getDown().setDown(currentColumn);
         
@@ -90,9 +101,9 @@ public class Sudoku implements ISudoku {
     rowIndex = -1;
         
     // Create columns for row-number constraint set.
-    for (int j = MAX_ROW_COLUMN_CONSTRAINT + 1; j < MAX_ROW_NUMBER_CONSTRAINT; j++) {
+    for (int j = MAX_ROW_COLUMN_CONSTRAINT; j < MAX_ROW_NUMBER_CONSTRAINT; j++) {
       
-      if ((columnIndex = j % 9) == 0) rowIndex++;
+      if ((columnIndex = j % GRID_COLUMNS) == 0) rowIndex++;
       
       currentColumn.setRight(new ColumnNode(j));
       currentColumn.getRight().setLeft(currentColumn);
@@ -100,11 +111,15 @@ public class Sudoku implements ISudoku {
       
       // Create row nodes.
       
-      for (int i = 0; i < 9; i++) {
+      for (int i = 0; i < MAX_GRID_VALUE; i++) {
         
-        if (sudokuGrid[rowIndex][i].getValue() == columnIndex) {
+        int value = sudokuGrid[rowIndex][i].getValue();
+        
+        if (value == columnIndex + 1) {
           
-          currentColumn.setDown(new Node(currentColumn, columnIndex * rowIndex, j));
+          //currentColumn.setDown(new Node(currentColumn, columnIndex * rowIndex, j));
+          calculationStore = columnIndex + 1 + (j - MAX_ROW_COLUMN_CONSTRAINT) * MAX_GRID_VALUE;
+          currentColumn.setDown(new Node(currentColumn, calculationStore, j));
           currentColumn.getDown().setUp(currentColumn);
           currentColumn.getDown().setDown(currentColumn);
           
@@ -114,15 +129,15 @@ public class Sudoku implements ISudoku {
           
           for (int k = 1; k < GRID_ROWS * GRID_ROWS; k++) {
             
-            currentRow.setDown(new Node(currentColumn,9 * k + j * rowIndex, j));
+            currentRow.setDown(new Node(currentColumn, MAX_GRID_VALUE * k + j * rowIndex, j));
             currentRow.getDown().setUp(currentRow);
             currentRow.getDown().setDown(currentColumn);
             currentRow = currentRow.getDown();
             
-            
           }
           
         }
+        
       }
       
     }
@@ -131,9 +146,9 @@ public class Sudoku implements ISudoku {
     rowIndex = -1;
         
     // Create columns for column-number constraint set.
-    for (int j = MAX_ROW_COLUMN_CONSTRAINT + 1; j < MAX_ROW_NUMBER_CONSTRAINT; j++) {
+    for (int j = MAX_ROW_COLUMN_CONSTRAINT; j < MAX_ROW_NUMBER_CONSTRAINT; j++) {
       
-      if ((columnIndex = j % 9) == 0) rowIndex++;
+      if ((columnIndex = j % GRID_COLUMNS) == 0) rowIndex++;
       
       currentColumn.setRight(new ColumnNode(j));
       currentColumn.getRight().setLeft(currentColumn);
@@ -141,7 +156,7 @@ public class Sudoku implements ISudoku {
       
       // Create row nodes.
       
-      for (int i = 0; i < 9; i++) {
+      for (int i = 0; i < GRID_COLUMNS; i++) {
         
         if (sudokuGrid[i][columnIndex].getValue() == columnIndex) {
           
@@ -165,6 +180,7 @@ public class Sudoku implements ISudoku {
           }
           
         }
+        
       }
       
     }
@@ -174,16 +190,18 @@ public class Sudoku implements ISudoku {
   }
   
   /**
-   * Converts a sudoku puzzle in dancing links format back to normal.
+   * Converts a Sudoku puzzle in dancing links format back to normal.
    * @param dancingLinks The pointer to the dancing links to decode.
-   * @return A pointer to the converted sudoku grid.
+   * @return A pointer to the converted Sudoku grid.
    */
   private Cell[][] decodeSudoku(ColumnNode dancingLinks) {
+    // TODO: Not yet implemented.
     return null;
     
   }
   
   public ColumnNode algorithmX(ColumnNode dancingLinks) {
+    // TODO: Not yet implemented.
     return null;
   }
   
@@ -194,19 +212,21 @@ public class Sudoku implements ISudoku {
   }
   
   public Cell[][] loadText() {
+    // TODO: Not yet implemented.
     return null;    
   }
   
   /**
-   * Displays a text output of a sudoku puzzle.
+   * Displays a text output of a Sudoku puzzle.
    * @param sudokuGrid The Sudoku puzzle to be displayed.
    */
   public void displayText(Cell[][] sudokuGrid) {
-
+    // TODO: Not yet implemented.
   }
   
   @Override
   public Cell[][] generate(Difficulty difficulty) {
+    // TODO: Not yet implemented.
     return null;
   }
   
