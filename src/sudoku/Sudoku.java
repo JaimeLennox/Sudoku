@@ -14,6 +14,7 @@ public class Sudoku implements ISudoku {
   private static final int GRID_COLUMNS   = 9;
   private static final int GRID_ROWS      = 9;
   private static final int MAX_GRID_VALUE = 9;
+  private static final int BOX_SIZE = (int) Math.sqrt(MAX_GRID_VALUE);
   
   private static final int MAX_MATRIX_ROWS    = 729;
   private static final int MAX_MATRIX_COLUMNS = 324;
@@ -29,7 +30,7 @@ public class Sudoku implements ISudoku {
     
     for (int i = 0; i < GRID_ROWS; i++) {
       for (int j = 0; j < GRID_COLUMNS; j++) {
-        mainGrid[GRID_ROWS][GRID_COLUMNS] = new Cell(sudoku[GRID_ROWS][GRID_COLUMNS]);
+        mainGrid[i][j] = new Cell(sudoku[i][j]);
       }
     }
     
@@ -218,10 +219,47 @@ public class Sudoku implements ISudoku {
   
   /**
    * Displays a text output of a Sudoku puzzle.
-   * @param sudokuGrid The Sudoku puzzle to be displayed.
    */
-  public void displayText(Cell[][] sudokuGrid) {
-    // TODO: Not yet implemented.
+  public void displayText() {
+    
+    for (int i = 0; i < GRID_ROWS; i++) {
+      
+      if (i % BOX_SIZE == 0) {
+        displayHorizontalBorder();
+      }
+      
+      for (int j = 0; j < GRID_COLUMNS; j++) {
+        
+        if (j == 0) {
+          System.out.print("|");
+        }
+        
+        if (j % BOX_SIZE == 0 && j != 0) {
+          System.out.print(" | ");
+        }
+        
+        System.out.print(mainGrid[i][j].getValue());
+        
+        if (j == GRID_COLUMNS - 1) {
+          System.out.println("|");
+        }
+        
+      }
+      
+    }
+    
+    displayHorizontalBorder();
+    
+  }
+  
+  private void displayHorizontalBorder() {
+    System.out.print("|");
+    
+    for (int i = 0; i < GRID_COLUMNS + BOX_SIZE * 2; i++) {
+      System.out.print("=");
+    }
+    
+    System.out.println("|");
   }
   
   @Override
